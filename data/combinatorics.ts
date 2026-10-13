@@ -1,0 +1,91 @@
+import type { PuzzleInput } from "@/lib/types";
+
+export const combinatorics: PuzzleInput[] = [
+  {
+    slug: "party-handshakes",
+    title: "The Handshake Count",
+    category: "combinatorics",
+    difficulty: "Easy",
+    minutes: 5,
+    teaser: "Twelve people, everyone shakes hands once. How many handshakes?",
+    statement: String.raw`Twelve people attend a meeting and each person shakes hands exactly once with every other person. How many handshakes take place?`,
+    hints: [
+      String.raw`Each handshake involves exactly two people. How many ways can you choose a pair from $12$?`,
+      String.raw`Alternatively: each person shakes $11$ hands. What does that total count, and how many times is each handshake counted?`,
+    ],
+    answer: String.raw`$66$`,
+    answerValue: "66",
+    solution: [
+      String.raw`Each handshake corresponds to an unordered pair of people, so the answer is $\binom{12}{2}=\dfrac{12\cdot11}{2}=66$.`,
+      String.raw`Check by double counting: $12\cdot11=132$ hand-clasps, and every handshake is counted twice (once by each participant), giving $132/2=66$.`,
+    ],
+    source: "Original",
+  },
+  {
+    slug: "balanced-parentheses",
+    title: "Balanced Parentheses",
+    category: "combinatorics",
+    difficulty: "Medium",
+    minutes: 15,
+    teaser: "How many ways to write five pairs of parentheses so they all match?",
+    statement: String.raw`A string of parentheses is *balanced* if every opening bracket is matched by a later closing bracket, such as $\texttt{(()())}$ or $\texttt{()(())}$. How many balanced strings are there using exactly $5$ pairs of parentheses?`,
+    hints: [
+      String.raw`Count all strings with five $\texttt{(}$ and five $\texttt{)}$ first. Then subtract the ones that are not balanced.`,
+      String.raw`A bad string has a first moment where closers outnumber openers by one. Swap every bracket after that moment and see what kind of string you get.`,
+    ],
+    answer: String.raw`$42$`,
+    answerValue: "42",
+    solution: [
+      String.raw`All strings with five $\texttt{(}$ and five $\texttt{)}$: $\binom{10}{5}=252$.`,
+      String.raw`A string is bad if at some point it has more closers than openers. Take the first such point, where the prefix has $k$ openers and $k+1$ closers, and swap every bracket after it. The remainder had $5-k$ openers and $4-k$ closers, so after swapping the whole string has $k+(4-k)=4$ openers and $(k+1)+(5-k)=6$ closers.`,
+      String.raw`This is reversible, so bad strings correspond one-to-one with strings of four openers and six closers: $\binom{10}{4}=210$.`,
+      String.raw`Balanced strings: $252-210=42$. This is the Catalan number $C_5=\dfrac16\binom{10}{5}$.`,
+    ],
+    source: "Classical (Catalan numbers; reflection principle)",
+  },
+  {
+    slug: "hat-shuffle",
+    title: "Nobody Gets Their Own Hat",
+    category: "combinatorics",
+    difficulty: "Medium",
+    minutes: 15,
+    teaser: "Five hats are shuffled and handed back. How many shuffles return no one's own hat?",
+    statement: String.raw`Five guests leave their hats at the door. The hats get shuffled and returned, one to each guest. In how many of the $5!=120$ possible ways does **nobody** receive their own hat?`,
+    hints: [
+      String.raw`It's easier to count the complement: arrangements where *at least one* guest gets their own hat.`,
+      String.raw`Use inclusion–exclusion. If a given set of $k$ guests all get their own hats, how many arrangements remain?`,
+    ],
+    answer: String.raw`$44$`,
+    answerValue: "44",
+    solution: [
+      String.raw`By inclusion–exclusion, the number of arrangements with no fixed point is
+$$\sum_{k=0}^{5}(-1)^k\binom5k(5-k)!.$$`,
+      String.raw`Compute: $120-5\cdot24+10\cdot6-10\cdot2+5\cdot1-1\cdot1=120-120+60-20+5-1=44$.`,
+      String.raw`These are the *derangements* of five objects, $D_5=44$ (note $44/120\approx0.367\approx1/e$).`,
+    ],
+    source: "Classical (derangements)",
+  },
+  {
+    slug: "bounded-candy-split",
+    title: "Sharing Candy Fairly-ish",
+    category: "combinatorics",
+    difficulty: "Hard",
+    minutes: 25,
+    teaser: "Twenty identical candies, four children, and nobody may take more than eight.",
+    statement: String.raw`Twenty identical candies are distributed among four different children, and any child may receive zero. In how many ways can this be done if no child receives more than $8$ candies?`,
+    hints: [
+      String.raw`First ignore the limit: stars and bars counts solutions of $a+b+c+d=20$ in non-negative integers.`,
+      String.raw`Subtract distributions where some child gets at least $9$. Substitute $a'=a-9$ to count them, then correct for double subtraction.`,
+    ],
+    answer: String.raw`$375$`,
+    answerValue: "375",
+    solution: [
+      String.raw`Without a limit: $\binom{20+3}{3}=\binom{23}{3}=1771$.`,
+      String.raw`Distributions where a particular child gets at least $9$: give that child $9$ candies first, leaving $11$ to distribute freely: $\binom{14}{3}=364$. With four children: $4\cdot364=1456$.`,
+      String.raw`Two particular children both get at least $9$: that uses $18$, leaving $2$: $\binom{5}{3}=10$. There are $\binom42=6$ pairs, so add back $60$.`,
+      String.raw`Three children each with at least $9$ would need $27>20$ candies, so that term is $0$.`,
+      String.raw`Total: $1771-1456+60=375$.`,
+    ],
+    source: "Original",
+  },
+];

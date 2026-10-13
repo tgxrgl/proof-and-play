@@ -1,0 +1,91 @@
+import type { PuzzleInput } from "@/lib/types";
+
+export const calculus: PuzzleInput[] = [
+  {
+    slug: "rectangle-under-parabola",
+    title: "The Biggest Rectangle Under a Hill",
+    category: "calculus",
+    difficulty: "Easy",
+    minutes: 10,
+    teaser: "Fit the largest rectangle beneath a parabola. Calculus finds the sweet spot.",
+    statement: String.raw`A rectangle has its base on the $x$-axis and its two top corners on the curve $y=12-x^2$. What is the largest possible area of such a rectangle?`,
+    hints: [
+      String.raw`If the top-right corner is $(x,\,12-x^2)$ with $x>0$, what are the width and height?`,
+      String.raw`Write the area as a function of $x$ and set its derivative to zero.`,
+    ],
+    answer: String.raw`$32$`,
+    answerValue: "32",
+    solution: [
+      String.raw`By symmetry the corners are $(\pm x,\,12-x^2)$ with $0<x<\sqrt{12}$. The width is $2x$ and the height $12-x^2$, so $A(x)=2x(12-x^2)=24x-2x^3$.`,
+      String.raw`$A'(x)=24-6x^2=0$ gives $x=2$ (the positive root).`,
+      String.raw`$A$ is $0$ at both ends of the interval and positive in between, so this critical point is the maximum: $A(2)=2\cdot2\cdot8=32$.`,
+    ],
+    source: "Original",
+  },
+  {
+    slug: "halving-series",
+    title: "Weighted by Halves",
+    category: "calculus",
+    difficulty: "Medium",
+    minutes: 12,
+    teaser: "Sum n/2ⁿ forever. A neat trick beats the formula.",
+    statement: String.raw`Find the exact value of
+$$\sum_{n=1}^{\infty}\frac{n}{2^n}=\frac12+\frac24+\frac38+\frac4{16}+\cdots$$`,
+    hints: [
+      String.raw`Call the sum $S$ and compute $\tfrac12S$. Then subtract.`,
+      String.raw`After subtracting you should get a plain geometric series.`,
+    ],
+    answer: String.raw`$2$`,
+    answerValue: "2",
+    solution: [
+      String.raw`The series converges (the terms shrink geometrically), so manipulations are justified. Let $S=\sum_{n\ge1} n/2^n$.`,
+      String.raw`Then $\tfrac12S=\sum_{n\ge1}\dfrac n{2^{n+1}}=\sum_{n\ge2}\dfrac{n-1}{2^n}$.`,
+      String.raw`Subtract: $S-\tfrac12S=\dfrac12+\sum_{n\ge2}\dfrac{n-(n-1)}{2^n}=\sum_{n\ge1}\dfrac1{2^n}=1$.`,
+      String.raw`So $\tfrac12S=1$ and $S=2$.`,
+    ],
+    source: "Original",
+  },
+  {
+    slug: "harmonic-ten",
+    title: "The Slowest Divergence",
+    category: "calculus",
+    difficulty: "Medium",
+    minutes: 20,
+    teaser: "The harmonic series grows without bound, but how many terms to pass 10?",
+    statement: String.raw`The harmonic series $H_n=1+\tfrac12+\tfrac13+\cdots+\tfrac1n$ grows without bound, but extremely slowly. What is the smallest $n$ for which $H_n>10$?`,
+    hints: [
+      String.raw`Compare $H_n$ with the area under $y=1/x$: you should find $H_n\approx\ln n+\gamma$ for a constant $\gamma\approx0.5772$.`,
+      String.raw`Solve $\ln n+\gamma\approx10$. Then refine using the next correction term $\tfrac1{2n}$.`,
+    ],
+    answer: String.raw`$n=12367$`,
+    answerValue: "12367",
+    solution: [
+      String.raw`The standard asymptotic is $H_n=\ln n+\gamma+\dfrac1{2n}-\dfrac1{12n^2}+\cdots$ where $\gamma\approx0.5772157$ is the Euler–Mascheroni constant.`,
+      String.raw`Setting $H_n\approx10$ gives $\ln n\approx9.4227843$, so $n\approx e^{9.4227843}\approx12366.5$.`,
+      String.raw`Checking neighbours with the correction term: $H_{12366}\approx9.99996$, which is just below $10$, while $H_{12367}\approx10.00004$, just above.`,
+      String.raw`So the smallest such $n$ is $12367$. (The margins are tiny, so the estimate is best confirmed by direct summation on a computer.)`,
+    ],
+    source: "Classical (harmonic series; Euler–Mascheroni constant)",
+  },
+  {
+    slug: "intersecting-cylinders",
+    title: "Two Cylinders Crossing",
+    category: "calculus",
+    difficulty: "Hard",
+    minutes: 30,
+    teaser: "Drill two perpendicular holes of equal radius. What volume do they share?",
+    statement: String.raw`Two solid cylinders of radius $1$ have axes that cross at right angles at the origin: the first is $x^2+y^2\le1$ and the second is $x^2+z^2\le1$ (both infinitely long). Find the volume of their intersection.`,
+    hints: [
+      String.raw`Slice the solid by a plane $x=\text{const}$. What shape is the cross-section?`,
+      String.raw`For fixed $x$, the first cylinder restricts $y$ and the second restricts $z$. Each restriction is a symmetric interval.`,
+    ],
+    answer: String.raw`$\dfrac{16}{3}$`,
+    answerValue: "16/3",
+    solution: [
+      String.raw`The solid is $\{x^2+y^2\le1,\ x^2+z^2\le1\}$. For fixed $x$ with $|x|\le1$, the conditions are $|y|\le\sqrt{1-x^2}$ and $|z|\le\sqrt{1-x^2}$: a **square** of side $2\sqrt{1-x^2}$.`,
+      String.raw`The cross-section area is $4(1-x^2)$, so $V=\int_{-1}^{1}4(1-x^2)\,dx=4\left[x-\tfrac{x^3}3\right]_{-1}^{1}=4\cdot\tfrac43=\tfrac{16}3$.`,
+    ],
+    source: "Classical (Steinmetz solid)",
+    diagram: "steinmetz",
+  },
+];

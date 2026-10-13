@@ -1,0 +1,20 @@
+const fact = (n: number): number => (n <= 1 ? 1 : n * fact(n - 1));
+const C = (n: number, k: number) => { let r = 1; for (let i = 1; i <= k; i++) r = (r * (n - k + i)) / i; return Math.round(r); };
+export const checks: Record<string, () => boolean | string> = {
+  "license-plates": () => 26 ** 3 * 10 ** 3 === 17576000,
+  "anagrams-of-mississippi": () => fact(11) / (fact(4) * fact(4) * fact(2)) === 34650,
+  "committee-with-a-feud": () => { let n = 0; for (let a = 0; a < 10; a++) for (let b = a + 1; b < 10; b++) for (let c = b + 1; c < 10; c++) if (!([a, b, c].includes(0) && [a, b, c].includes(1))) n++; return n === 112; },
+  "round-table-seating": () => { const seen = new Set<string>(); const perms = (a: number[]): number[][] => (a.length <= 1 ? [a] : a.flatMap((x, i) => perms([...a.slice(0, i), ...a.slice(i + 1)]).map((p) => [x, ...p]))); for (const p of perms([0, 1, 2, 3, 4, 5, 6])) { const i = p.indexOf(0); seen.add([...p.slice(i), ...p.slice(0, i)].join()); } return seen.size === 720; },
+  "grid-paths-six": () => { const g = Array.from({ length: 7 }, () => new Array(7).fill(1)); for (let i = 1; i < 7; i++) for (let j = 1; j < 7; j++) g[i][j] = g[i - 1][j] + g[i][j - 1]; return g[6][6] === 924; },
+  "grid-paths-avoiding": () => { const g = Array.from({ length: 5 }, () => new Array(5).fill(0)); g[0][0] = 1; for (let i = 0; i < 5; i++) for (let j = 0; j < 5; j++) { if (i === 2 && j === 2) { g[i][j] = 0; continue; } if (i || j) g[i][j] = (i ? g[i - 1][j] : 0) + (j ? g[i][j - 1] : 0); } return g[4][4] === 34; },
+  "positive-solutions": () => { let n = 0; for (let a = 1; a < 12; a++) for (let b = 1; b < 12; b++) if (12 - a - b >= 1) n++; return n === 55; },
+  "full-house-count": () => { let n = 0; const rank = (c: number) => Math.floor(c / 4); const deck = 52; for (let a = 0; a < deck; a++) for (let b = a + 1; b < deck; b++) for (let c = b + 1; c < deck; c++) { if (rank(a) !== rank(b) || rank(b) !== rank(c)) continue; for (let d = 0; d < deck; d++) for (let e = d + 1; e < deck; e++) { if (rank(d) !== rank(e) || rank(d) === rank(a)) continue; n++; } } return n === 3744; },
+  "no-two-consecutive-subsets": () => { let n = 0; for (let m = 0; m < 1 << 10; m++) if ((m & (m >> 1)) === 0) n++; return n === 144; },
+  "dominoes-two-by-ten": () => { const memo = new Map<number, number>(); const f = (n: number): number => (n <= 1 ? 1 : memo.get(n) ?? (memo.set(n, f(n - 1) + f(n - 2)), memo.get(n)!)); return f(10) === 89; },
+  "separated-ones": () => { let n = 0; for (let m = 0; m < 1 << 12; m++) { let ones = 0; for (let i = 0; i < 12; i++) ones += (m >> i) & 1; if (ones === 4 && (m & (m >> 1)) === 0) n++; } return n === 126 && C(9, 4) === 126; },
+  "onto-functions": () => { let n = 0; for (let m = 0; m < 4 ** 6; m++) { const seen = new Set<number>(); let x = m; for (let i = 0; i < 6; i++) { seen.add(x % 4); x = Math.floor(x / 4); } if (seen.size === 4) n++; } return n === 1560; },
+  "distinct-part-partitions": () => { let n = 0; const go = (rem: number, max: number) => { if (rem === 0) { n++; return; } for (let k = Math.min(rem, max); k >= 1; k--) go(rem - k, k - 1); }; go(10, 10); return n === 10; },
+  "even-binary-matrices": () => { let n = 0; for (let m = 0; m < 512; m++) { const b = (r: number, c: number) => (m >> (3 * r + c)) & 1; let ok = true; for (let i = 0; i < 3; i++) { if ((b(i, 0) + b(i, 1) + b(i, 2)) % 2) ok = false; if ((b(0, i) + b(1, i) + b(2, i)) % 2) ok = false; } if (ok) n++; } return n === 16; },
+  "anagrams-of-banana": () => { const set = new Set<string>(); const go = (rest: string[], cur: string) => { if (!rest.length) { set.add(cur); return; } rest.forEach((c, i) => go([...rest.slice(0, i), ...rest.slice(i + 1)], cur + c)); }; go("BANANA".split(""), ""); return set.size === 60; },
+  "stirling-six-three": () => { let n = 0; const go = (i: number, parts: number[], label: number[]) => { if (i === 6) { if (parts.length === 3) n++; return; } for (let p = 0; p <= parts.length; p++) { if (p === 3) break; const np = p === parts.length ? [...parts, 1] : parts; go(i + 1, np, label); } }; go(0, [], []); return n === 90; },
+};
